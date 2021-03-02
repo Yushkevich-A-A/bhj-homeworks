@@ -4,6 +4,7 @@ class Game {
     this.wordElement = container.querySelector('.word');
     this.winsElement = container.querySelector('.status__wins');
     this.lossElement = container.querySelector('.status__loss');
+    this.counterElement = container.querySelector('.status__counter');
 
     this.reset();
 
@@ -26,6 +27,18 @@ class Game {
     })
   }
 
+// Обратный отсчет до смены слова
+
+timerStart() {
+  this.counterElement.textContent;
+  if (this.counterElement.textContent > 0) {
+    setTimeout(this.timerStart, 1000);
+  } else {
+    this.fail();
+  }
+}
+
+
   success() {
     this.currentSymbol.classList.add('symbol_correct');
     this.currentSymbol = this.currentSymbol.nextElementSibling;
@@ -41,7 +54,7 @@ class Game {
   }
 
   fail() {
-    if (++this.lossElement.textContent === 5) {
+    if (++this.lossElement.textContent === 1) {
       alert('Вы проиграли!');
       this.reset();
     }
@@ -52,6 +65,7 @@ class Game {
     const word = this.getWord();
 
     this.renderWord(word);
+    this.timerStart();
   }
 
   getWord() {
@@ -66,7 +80,7 @@ class Game {
         'popcorn',
         'cinema',
         'love',
-        'javascript'
+        'javascript',
       ],
       index = Math.floor(Math.random() * words.length);
 
@@ -81,7 +95,7 @@ class Game {
       )
       .join('');
     this.wordElement.innerHTML = html;
-
+    this.counterElement.textContent = [...word].length;
     this.currentSymbol = this.wordElement.querySelector('.symbol_current');
   }
 }
