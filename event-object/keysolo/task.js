@@ -7,7 +7,7 @@ class Game {
     this.counterElement = container.querySelector('.status__counter');
     this.timerId = setInterval(() => {
       this.counterElement.textContent -= 1;
-      if(+this.counterElement.textContent === 0) {
+      if(this.counterElement.textContent == 0) {
         this.fail();
       }
     }, 1000);
@@ -32,6 +32,7 @@ class Game {
       }
     })
   }
+
 
   success() {
     this.currentSymbol.classList.add('symbol_correct');
@@ -93,5 +94,5 @@ class Game {
   }
 }
 
-new Game(document.getElementById('game'));
+new Game(document.getElementById('game'))
 
