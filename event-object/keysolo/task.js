@@ -5,6 +5,12 @@ class Game {
     this.winsElement = container.querySelector('.status__wins');
     this.lossElement = container.querySelector('.status__loss');
     this.counterElement = container.querySelector('.status__counter');
+    this.timerId = setInterval(() => {
+      this.counterElement.textContent -= 1;
+      if(this.counterElement.textContent == 0) {
+        this.fail();
+      }
+    }, 1000);
 
     this.reset();
 
@@ -27,17 +33,6 @@ class Game {
     })
   }
 
-// Обратный отсчет до смены слова
-
-timerStart() {
-  this.counterElement.textContent;
-  if (this.counterElement.textContent > 0) {
-    setTimeout(this.timerStart, 1000);
-  } else {
-    this.fail();
-  }
-}
-
 
   success() {
     this.currentSymbol.classList.add('symbol_correct');
@@ -54,7 +49,7 @@ timerStart() {
   }
 
   fail() {
-    if (++this.lossElement.textContent === 1) {
+    if (++this.lossElement.textContent === 5) {
       alert('Вы проиграли!');
       this.reset();
     }
@@ -65,7 +60,6 @@ timerStart() {
     const word = this.getWord();
 
     this.renderWord(word);
-    this.timerStart();
   }
 
   getWord() {
