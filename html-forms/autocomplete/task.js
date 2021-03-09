@@ -68,6 +68,20 @@ class Autocomplete {
   }
 
   getMatches( text ) {
+    const arr = [];
+
+    for (let i of this.input.options) {
+      if (i.text.includes(text)) {
+        const obj = {}
+        obj.text = i.text;
+        obj.value = i.value;
+
+        arr.push(obj);
+
+      }
+    }
+
+    return arr;
     /*
       TODO: этот метод нужно дописать
       text - фраза, которую вводят в поле поиска
@@ -81,12 +95,7 @@ class Autocomplete {
         value: 'Содержимое атрибута value'
       }
     */
-    return [
-      {
-        text: 'Чубакка',
-        value: '1'
-      }
-    ];
+
   }
 }
 
