@@ -13,12 +13,12 @@ for (let item of interestCheck) {
             return;
         }
 
-        // const blockExternalCheckbox = item.closest('ul.interests').previousElementSibling;
-        // console.log(blockExternalCheckbox);
-        // if (blockExternalCheckbox) {
-        //     blockExternalCheckbox.getElementsByClassName('interest__check')[0].checked = item.checked;
-        //     return;
-        // }
+        const blockExternalCheckbox = item.closest('ul.interests').previousElementSibling;
+        console.log(blockExternalCheckbox);
+        if (blockExternalCheckbox) {
+            blockExternalCheckbox.getElementsByClassName('interest__check')[0].checked = item.checked;
+            return;
+        }
 
     })
 }
