@@ -30,7 +30,7 @@ function answerOfBot() {
                                          <div class="message__time">${getNowTime()}</div>
                                          <div class="message__text">${getRandomAnswer()}</div>
                                      </div>`;
-    chatWidgetMessages.closest(".chat-widget__messages-container").scrollTo(null, chatWidgetMessages.lastElementChild.getBoundingClientRect().bottom)
+    chatWidgetMessages.scrollIntoView(false);
 }
 
 chatWidget.addEventListener('click', () => {
