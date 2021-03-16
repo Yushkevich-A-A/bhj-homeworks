@@ -39,6 +39,10 @@ body {
   content: '\2716';
   color: white;
 }
+.movie__image {
+  position: absolute;
+  display: block;
+}
 
 .product {
   display: flex;
