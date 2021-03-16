@@ -1,3 +1,11 @@
 body {
   font-family: Arial;
 }
+
+.poll__answer {
+  margin-right: 10px;
+}
+
+.percent {
+  font-weight: bold;
+}
