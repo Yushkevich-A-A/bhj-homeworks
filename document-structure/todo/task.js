@@ -7,12 +7,14 @@ const tasksList = document.getElementById('tasks__list');
 const localKeysList = Object.keys(localStorage);
 
 for (let i of localKeysList) {
-    tasksList.insertAdjacentHTML('beforeend', localStorage[i]);
-    const taskRemove = tasksList.lastChild.querySelector('.task__remove');
-    taskRemove.addEventListener('click', () => {
-        taskRemove.closest('.task').remove();
-        localStorage.removeItem(i);
-    })
+    if (i.includes('todo__')) {
+        tasksList.insertAdjacentHTML('beforeend', localStorage[i]);
+        const taskRemove = tasksList.lastChild.querySelector('.task__remove');
+        taskRemove.addEventListener('click', () => {
+            taskRemove.closest('.task').remove();
+            localStorage.removeItem(i);
+        })
+    }
 }
 
 
@@ -41,5 +43,5 @@ tasksAdd.addEventListener('click', e => {
     task.appendChild(taskTitle);
     task.appendChild(taskRemove);
     tasksList.appendChild(task);
-    localStorage.setItem(taskTitle.textContent, task.outerHTML);
+    localStorage.setItem('todo__' + taskTitle.textContent, task.outerHTML);
 })
