@@ -39,9 +39,13 @@ for (let i of hasTooltip) {
     i.insertAdjacentElement('beforeend', tooltip);
     i.addEventListener('click', e => {
         e.preventDefault();
-        resetClassActive();
-        tooltip.classList.add('tooltip_active');
-        tooltip.dataset.position = 'bottom';
+        if (tooltip.classList.contains('tooltip_active')){
+            tooltip.classList.toggle('tooltip_active');
+        } else {
+            resetClassActive();
+            tooltip.classList.toggle('tooltip_active');
+        }
+        tooltip.dataset.position = (tooltip.closest('.has-tooltip').getAttribute('data-position')) ? tooltip.closest('.has-tooltip').dataset.position :'bottom';
         positionToolTip (tooltip);
     });
 }

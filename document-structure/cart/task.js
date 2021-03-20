@@ -4,23 +4,22 @@ const productQuantityControl = document.getElementsByClassName('product__quantit
 const productAdd = document.getElementsByClassName('product__add');
 const cartProducts = document.querySelector('.cart__products');
 const card = document.querySelector('.cart');
+let  localStorageArr = [];
 
 
-if (!localStorage.getItem('cart__')){
+if (localStorage.getItem('cart')) {
+    localStorageArr = JSON.parse(localStorage.getItem('cart'));
+    for (let i of localStorageArr) {
+        addNewProductToCart(i);
+    }
+} else {
     card.classList.add('hidden');
 }
 
 
-cartProducts.innerHTML = localStorage.getItem('cart__');
-
-for (let i of cartProducts.getElementsByClassName('cart__product-delete')) {
-    i.addEventListener('click', () => removeProduct(i));
-}
-
-
-function addNewProductToCart(item) {
-    const cartProduct = item.cloneNode();
-    const productImage = item.getElementsByClassName('product__image')[0].cloneNode();
+function addNewProductToCart(obj) {
+    const cartProduct = document.createElement('div');
+    const productImage = document.createElement('img');
     const cartProductCount = document.createElement('div');
     const buttomDeleteProduct = document.createElement('div');
 
@@ -29,7 +28,9 @@ function addNewProductToCart(item) {
     cartProductCount.className = 'cart__product-count';
     buttomDeleteProduct.className = 'cart__product-delete';
 
-    cartProductCount.textContent = item.querySelector('.product__quantity-value').textContent;
+    cartProduct.dataset.id = obj.id;
+    productImage.src = obj.src;
+    cartProductCount.textContent = obj.amount;
 
     cartProduct.appendChild(productImage);
     cartProduct.appendChild(cartProductCount);
@@ -45,12 +46,16 @@ function addNewProductToCart(item) {
     return cartProduct;
 }
 
-function removeProduct(item) {
-    item.closest('.cart__product').remove();
+function removeProduct(buttonProductRemove) {
+    localStorageArr.splice(localStorageArr.findIndex(item => item.id === buttonProductRemove.closest('.cart__product').dataset.id), 1);
+    localStorage.setItem('cart', JSON.stringify(localStorageArr));
+    buttonProductRemove.closest('.cart__product').remove();
         if (cartProducts.children.length === 0) {
             card.classList.add('hidden');
     }
-    localStorage.setItem('cart__', cartProducts.innerHTML);
+    if (localStorageArr.length === 0) {
+        localStorage.removeItem('cart');
+    }
 };
 
 function smoothMovementProductToCart(startElement, endElement) {
@@ -59,7 +64,7 @@ function smoothMovementProductToCart(startElement, endElement) {
     movieImage.className ='movie__image';
     movieImage.style.width = startElement.getBoundingClientRect().width + 'px';
     movieImage.style.left = startElement.getBoundingClientRect().left + 'px';
-    movieImage.style.top = startElement.getBoundingClientRect().top + 'px';
+    movieImage.style.top = startElement.offsetTop + 'px';
 
     let stepRight = (endElement.getBoundingClientRect().left - parseFloat(movieImage.style.left)) / 100;
     let stepTop = (parseFloat(movieImage.style.top) - (endElement.getBoundingClientRect().top + ((endElement.getBoundingClientRect().height - movieImage.getBoundingClientRect().height) / 2))) / 100;
@@ -99,16 +104,31 @@ for (let i of productAdd) {
         const elementId = Array.from(cartProducts.children).findIndex(item => item.dataset.id === parentElementProduct.dataset.id);
         const startElement = parentElementProduct.querySelector('.product__image');
         let endElement;
+        const objectCartProduct = {};
+
+        objectCartProduct.id = +parentElementProduct.dataset.id;
+        objectCartProduct.src = parentElementProduct.querySelector('.product__image').src;
+
 
         if (elementId !== -1) {
-            const countValue = +cartProducts.children[elementId].textContent;
-            cartProducts.children[elementId].getElementsByClassName('cart__product-count')[0].textContent = countValue + +parentElementProduct.querySelector('.product__quantity-value').textContent;
+            const countValue = +cartProducts.children[elementId].textContent + +parentElementProduct.querySelector('.product__quantity-value').textContent;
+            cartProducts.children[elementId].getElementsByClassName('cart__product-count')[0].textContent = countValue;
+            objectCartProduct.amount = countValue;
             endElement = cartProducts.children[elementId].querySelector('.cart__product-image');
         } else {
-            endElement = addNewProductToCart(parentElementProduct);
+            objectCartProduct.amount = +parentElementProduct.querySelector('.product__quantity-value').textContent;
+            endElement = addNewProductToCart(objectCartProduct);
         }
+
+        if (localStorageArr.find(item => item.id === objectCartProduct.id)) {
+        localStorageArr.splice(localStorageArr.findIndex(item => item.id === objectCartProduct.id), 1, objectCartProduct);
+        } else {
+        localStorageArr.push(objectCartProduct);
+        }
+        localStorage.setItem('cart', JSON.stringify(localStorageArr));
         smoothMovementProductToCart(startElement, endElement);
-        localStorage.setItem('cart__', cartProducts.innerHTML);
+        
     });
 }
 
+            

@@ -3,45 +3,51 @@
 const tasksAdd = document.getElementById('tasks__add');
 const tasksInput = document.getElementById('task__input');
 const tasksList = document.getElementById('tasks__list');
+const localStorageArray = (localStorage.getItem('todo')) ? localStorage.getItem('todo').split(',') : [];
 
-const localKeysList = Object.keys(localStorage);
-
-for (let i of localKeysList) {
-    if (i.includes('todo__')) {
-        tasksList.insertAdjacentHTML('beforeend', localStorage[i]);
-        const taskRemove = tasksList.lastChild.querySelector('.task__remove');
-        taskRemove.addEventListener('click', () => {
-            taskRemove.closest('.task').remove();
-            localStorage.removeItem(i);
-        })
-    }
+for (let i of localStorageArray) {
+    createTackElement(i);
 }
 
 
 tasksAdd.addEventListener('click', e => {
-    e.preventDefault();
+    if(tasksInput.value.trim() === '') {
+        return;
+    }
+
+    e.preventDefault(); 
+
+    const currantInputValue = tasksInput.value.trim();
+    createTackElement(currantInputValue);
+    tasksInput.value = '';
+    localStorageArray.push(currantInputValue);
+    localStorage.setItem('todo', localStorageArray.join(','));
+})
+
+function createTackElement(item) {
     const task = document.createElement('div');
     const taskTitle = document.createElement('div');
     const taskRemove = document.createElement('a');
-    const indexCurrentelement = tasksList.children.length;
 
     task.classList.add('task');
     taskTitle.classList.add('task__title');
     taskRemove.classList.add('task__remove');
     taskRemove.href = '#';
 
-    taskTitle.textContent = tasksInput.value;
+    taskTitle.textContent = item;
     taskRemove.innerHTML = '&times;';
-    tasksInput.value = '';
 
 
     taskRemove.addEventListener('click', () => {
         taskRemove.closest('.task').remove();
-        localStorage.removeItem(taskTitle.textContent);
+        localStorageArray.splice(localStorageArray.findIndex(value => value === item), 1)
+        localStorage.setItem('todo', localStorageArray.join(','));
+        if (!localStorage['todo']) {
+            localStorage.removeItem('todo');
+        }
     })
 
     task.appendChild(taskTitle);
     task.appendChild(taskRemove);
     tasksList.appendChild(task);
-    localStorage.setItem('todo__' + taskTitle.textContent, task.outerHTML);
-})
+}
